@@ -3,6 +3,7 @@ import axios from 'axios';
 import { formatJalaliDate, formatJalaliDatePersian, getPersianDayName } from '../utils/jalali';
 import Notification from './Notification';
 import LoadingSpinner from './LoadingSpinner';
+import { getApiUrl, API_ENDPOINTS } from '../config/api';
 
 interface TimeSlot {
   time: string;
@@ -33,7 +34,7 @@ const CustomerPanel: React.FC = () => {
   useEffect(() => {
     const fetchToday = async () => {
       try {
-        const response = await axios.get('/api/today');
+        const response = await axios.get(getApiUrl(API_ENDPOINTS.TODAY));
         const today = response.data.date;
         setSelectedDate(today);
         setForm(prev => ({ ...prev, date: today }));
@@ -49,7 +50,7 @@ const CustomerPanel: React.FC = () => {
     try {
       setLoading(true);
       const encodedDate = encodeURIComponent(date);
-      const response = await axios.get(`/api/available-slots/${encodedDate}`);
+      const response = await axios.get(getApiUrl(`${API_ENDPOINTS.AVAILABLE_SLOTS}/${encodedDate}`));
       
       if (response.data.isHoliday) {
         setNotification({ 
@@ -130,7 +131,7 @@ const CustomerPanel: React.FC = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('/api/reservations', form);
+      const response = await axios.post(getApiUrl(API_ENDPOINTS.RESERVATIONS), form);
       setNotification({ type: 'success', message: response.data.message });
       
       // Reset form

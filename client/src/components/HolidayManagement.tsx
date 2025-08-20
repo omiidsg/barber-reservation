@@ -3,6 +3,7 @@ import axios from 'axios';
 import { formatJalaliDate, formatJalaliDatePersian, getPersianDayName } from '../utils/jalali';
 import Notification from './Notification';
 import LoadingSpinner from './LoadingSpinner';
+import { getApiUrl, API_ENDPOINTS } from '../config/api';
 
 interface Holiday {
   id: number;
@@ -49,7 +50,7 @@ const HolidayManagement: React.FC = () => {
   const fetchHolidays = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/admin/holidays', {
+      const response = await axios.get(getApiUrl(API_ENDPOINTS.ADMIN_HOLIDAYS), {
         headers: {
           'Authorization': `Basic ${btoa('admin:123456')}`
         }
@@ -64,7 +65,7 @@ const HolidayManagement: React.FC = () => {
 
   const fetchWorkingHours = async () => {
     try {
-      const response = await axios.get('/api/admin/working-hours', {
+      const response = await axios.get(getApiUrl(API_ENDPOINTS.ADMIN_WORKING_HOURS), {
         headers: {
           'Authorization': `Basic ${btoa('admin:123456')}`
         }
@@ -77,7 +78,7 @@ const HolidayManagement: React.FC = () => {
 
   const fetchDisabledSlots = async () => {
     try {
-      const response = await axios.get('/api/admin/disabled-slots', {
+      const response = await axios.get(getApiUrl(API_ENDPOINTS.ADMIN_DISABLED_SLOTS), {
         headers: {
           'Authorization': `Basic ${btoa('admin:123456')}`
         }
@@ -99,7 +100,7 @@ const HolidayManagement: React.FC = () => {
     try {
       setLoading(true);
       console.log('Sending holiday data:', newHoliday); // برای دیباگ
-      const response = await axios.post('/api/admin/holidays', newHoliday, {
+      const response = await axios.post(getApiUrl(API_ENDPOINTS.ADMIN_HOLIDAYS), newHoliday, {
         headers: {
           'Authorization': `Basic ${btoa('admin:123456')}`,
           'Content-Type': 'application/json'
@@ -204,7 +205,7 @@ const HolidayManagement: React.FC = () => {
         date: isSpecificDateDisabled ? selectedDisabledDate : undefined
       };
       
-      await axios.post('/api/admin/disabled-slots', requestData, {
+              await axios.post(getApiUrl(API_ENDPOINTS.ADMIN_DISABLED_SLOTS), requestData, {
         headers: {
           'Authorization': `Basic ${btoa('admin:123456')}`
         }

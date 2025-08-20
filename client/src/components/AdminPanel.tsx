@@ -6,6 +6,7 @@ import LoadingSpinner from './LoadingSpinner';
 import SearchAndFilter from './SearchAndFilter';
 import Statistics from './Statistics';
 import HolidayManagement from './HolidayManagement';
+import { getApiUrl, API_ENDPOINTS } from '../config/api';
 
 interface Reservation {
   id: number;
@@ -81,7 +82,7 @@ const AdminPanel: React.FC = () => {
     
     try {
       setLoading(true);
-      const response = await axios.post('/api/admin/login', loginForm);
+      const response = await axios.post(getApiUrl(API_ENDPOINTS.ADMIN_LOGIN), loginForm);
       
       if (response.data.authenticated) {
         setIsAuthenticated(true);
@@ -111,7 +112,7 @@ const AdminPanel: React.FC = () => {
     try {
       setLoading(true);
       const authHeader = `Basic ${btoa(`${loginForm.username}:${loginForm.password}`)}`;
-      const response = await axios.get('/api/admin/reservations', {
+      const response = await axios.get(getApiUrl(API_ENDPOINTS.ADMIN_RESERVATIONS), {
         headers: { Authorization: authHeader }
       });
       setReservations(response.data);
