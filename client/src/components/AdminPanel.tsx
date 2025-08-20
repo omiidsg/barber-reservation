@@ -131,7 +131,7 @@ const AdminPanel: React.FC = () => {
 
     try {
       const authHeader = `Basic ${btoa(`${loginForm.username}:${loginForm.password}`)}`;
-      await axios.delete(`/api/admin/reservations/${id}`, {
+      await axios.delete(getApiUrl(`${API_ENDPOINTS.ADMIN_RESERVATIONS}/${id}`), {
         headers: { Authorization: authHeader }
       });
       setNotification({ type: 'success', message: 'رزرو با موفقیت حذف شد' });
@@ -165,7 +165,7 @@ const AdminPanel: React.FC = () => {
 
     try {
       const authHeader = `Basic ${btoa(`${loginForm.username}:${loginForm.password}`)}`;
-      await axios.put(`/api/admin/reservations/${editingReservation.id}`, editForm, {
+      await axios.put(getApiUrl(`${API_ENDPOINTS.ADMIN_RESERVATIONS}/${editingReservation.id}`), editForm, {
         headers: { Authorization: authHeader }
       });
       setNotification({ type: 'success', message: 'رزرو با موفقیت بروزرسانی شد' });
