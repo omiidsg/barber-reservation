@@ -124,6 +124,8 @@ function toGregorian(jalaliDate) {
 function authenticateAdmin(req, res, next) {
   const { username, password } = req.body;
   
+  console.log('Login attempt:', { username, password, expected: { username: ADMIN_USERNAME, password: ADMIN_PASSWORD } });
+  
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
     next();
   } else {
@@ -194,19 +196,11 @@ app.get('/api/available-slots/:date', (req, res) => {
           
           // If no specific hours for this date, get default hours
           if (!specificWorkingHours) {
-            db.get(
-              'SELECT * FROM working_hours WHERE date IS NULL AND is_active = 1 ORDER BY id DESC LIMIT 1',
-              (err, defaultWorkingHours) => {
-                if (err) {
-                  return res.status(500).json({ error: 'خطا در دریافت ساعات کاری' });
-                }
-                
-                const startHour = defaultWorkingHours ? parseInt(defaultWorkingHours.start_time.split(':')[0]) : 10;
-                const endHour = defaultWorkingHours ? parseInt(defaultWorkingHours.end_time.split(':')[0]) : 20;
-                
-                processTimeSlots(startHour, endHour, defaultWorkingHours);
-              }
-            );
+            // Use default working hours (10:00 to 20:00)
+            const startHour = 10;
+            const endHour = 20;
+            
+            processTimeSlots(startHour, endHour, { start_time: '10:00', end_time: '20:00' });
           } else {
             const startHour = parseInt(specificWorkingHours.start_time.split(':')[0]);
             const endHour = parseInt(specificWorkingHours.end_time.split(':')[0]);
@@ -671,6 +665,15 @@ app.get('/api/today', (req, res) => {
   const today = new Date();
   const jalaliDate = toJalali(today.toISOString().split('T')[0]);
   res.json({ date: jalaliDate });
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 // Start server
