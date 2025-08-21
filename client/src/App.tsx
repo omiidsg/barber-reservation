@@ -74,7 +74,7 @@ const App: React.FC = () => {
 
       // Track touch movement for mobile devices
       const handleTouchMove = (e: TouchEvent) => {
-        e.preventDefault(); // Prevent scrolling
+        // Don't prevent default to allow scrolling
         if (e.touches.length > 0) {
           const touch = e.touches[0];
           mouseX = touch.clientX;
@@ -99,7 +99,7 @@ const App: React.FC = () => {
       
       // Track mouse movement on window for better coverage
       window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchmove', handleTouchMove);
       window.addEventListener('touchstart', handleTouchStart);
       
       // Particle system
