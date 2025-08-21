@@ -59,7 +59,7 @@ const App: React.FC = () => {
       let mouseY = 0;
       let isMouseMoving = false;
       
-      // Track mouse movement
+      // Track mouse/touch movement
       const handleMouseMove = (e: MouseEvent) => {
         // Get mouse position relative to viewport
         mouseX = e.clientX;
@@ -71,9 +71,36 @@ const App: React.FC = () => {
           isMouseMoving = false;
         }, 50);
       };
+
+      // Track touch movement for mobile devices
+      const handleTouchMove = (e: TouchEvent) => {
+        e.preventDefault(); // Prevent scrolling
+        if (e.touches.length > 0) {
+          const touch = e.touches[0];
+          mouseX = touch.clientX;
+          mouseY = touch.clientY;
+          isMouseMoving = true;
+          
+          setTimeout(() => {
+            isMouseMoving = false;
+          }, 50);
+        }
+      };
+
+      // Track touch start for mobile devices
+      const handleTouchStart = (e: TouchEvent) => {
+        if (e.touches.length > 0) {
+          const touch = e.touches[0];
+          mouseX = touch.clientX;
+          mouseY = touch.clientY;
+          isMouseMoving = true;
+        }
+      };
       
       // Track mouse movement on window for better coverage
       window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchstart', handleTouchStart);
       
       // Particle system
       const particles: Array<{
@@ -176,6 +203,8 @@ const App: React.FC = () => {
       return () => {
         window.removeEventListener('resize', resizeCanvas);
         window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('touchmove', handleTouchMove);
+        window.removeEventListener('touchstart', handleTouchStart);
         if (particlesContainer.parentNode) {
           particlesContainer.parentNode.removeChild(particlesContainer);
         }
