@@ -679,5 +679,9 @@ app.get('/api/health', (req, res) => {
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Server accessible from: http://192.168.13.135:${PORT}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log('Server running in production mode');
+  } else {
+    console.log(`Server accessible from: http://192.168.13.135:${PORT}`);
+  }
 }); 
